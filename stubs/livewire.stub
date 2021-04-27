@@ -1,0 +1,100 @@
+<?php
+
+namespace App\Http\Livewire;
+
+use Livewire\WithPagination;
+use Livewire\Component;
+use App\Models\{{}};
+
+class {{}} extends Component
+{
+    use WithPagination;
+
+    public $isUpdate = false;
+    public $modelId;
+    public $search;
+
+
+    protected $listeners = [
+        'destroy'
+    ];
+
+    protected $paginationTheme = "bootstrap";
+
+    public function create()
+    {
+
+        $this->isUpdate = false;
+        $this->resetValidation();
+    }
+
+    public function store()
+    {
+        $this->validate();
+        {{}}::create([
+            
+        ]);
+        $this->resetValidation();
+        $this->resetPage();
+        $this->emit('{{}}DataChange', 'Success create data');
+    }
+
+    public function edit($id)
+    {
+        $this->modelId = $id;
+        $data = {{}}::find($id);
+        
+        $this->isUpdate = true;
+        $this->resetValidation();
+    }
+
+    public function update()
+    {
+        $data = {{}}::find($this->modelId);
+        
+        $data->save();
+        $allData = $this->read();
+        $this->resetValidation();
+        $this->gotoPage($allData->currentPage());
+        $this->emit('{{}}DataChange', 'Success update data');
+    }
+
+    public function destroy($id)
+    {
+        {{}}::destroy($id);
+        $allData = $this->read();
+        if ($allData) {
+            $this->gotoPage($allData->currentPage());
+        } else {
+            $this->resetPage();
+        }
+        $this->emit('{{}}DataChange', 'Success delete data');
+    }
+
+    public function rules()
+    {
+        return [
+            
+        ];
+    }
+
+    private function read()
+    {
+        if ($this->search) {
+            return {{}}::where(' ', 'like', '%' . $this->search . '%')
+                ->latest()
+                ->paginate(5);
+        } else {
+            return {{}}::->latest()
+                ->paginate(5);
+        }
+    }
+
+    public function render()
+    {
+        return view('livewire.{{}}', [
+            'data' => $this->read(),
+            'count_data' => {{}}::count(),
+        ])->layout('layouts.template');
+    }
+}
